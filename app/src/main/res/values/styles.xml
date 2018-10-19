@@ -7,5 +7,14 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
-
+    <style name="WhiteTitleText" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textSize">@dimen/large_text_size</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="WhiteRegularText" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textSize">@dimen/common_text_size</item>
+    </style>
 </resources>

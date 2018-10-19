@@ -17,7 +17,7 @@ import butterknife.Unbinder;
 public class TicTacToeFragment extends Fragment {
     private Unbinder unbinder;
     private TicTacToeGameViewModel viewModel;
-    @BindView(R.id.detailsText) TextView detailsText;
+    @BindView(R.id.gameId) TextView detailsText;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
