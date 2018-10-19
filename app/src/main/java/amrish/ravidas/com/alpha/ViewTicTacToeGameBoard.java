@@ -2,49 +2,22 @@ package amrish.ravidas.com.alpha;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.util.SparseArray;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 
-public class ViewTicTacToeBlock extends View {
+public class ViewTicTacToeGameBoard extends View {
 
-    enum TYPE {
-        NONE(0),
-        CROSS(1),
-        CIRCLE(2);
-
-        private final int mValue;
-        private final static SparseArray<TYPE> mMap = new SparseArray<>();
-
-
-        TYPE(final int value) {
-            mValue = value;
-        }
-
-        static {
-            for (TYPE type : TYPE.values()) {
-                mMap.put(type.mValue, type);
-            }
-        }
-
-        public static TYPE valueOf(int type) {
-            return mMap.get(type);
-        }
-
-        public int getValue() { return mValue; }
-    }
-
-    private TYPE mType;
     private Paint mPaint;
     private ValueAnimator mAnimator;
     private float mFraction = 0.0f;
     private int mCanvasWidth = 0;
     private int mCanvasHeight = 0;
+
     private final ValueAnimator.AnimatorUpdateListener listener = new ValueAnimator.AnimatorUpdateListener() {
         @Override
         public void onAnimationUpdate(ValueAnimator animation) {
@@ -53,27 +26,18 @@ public class ViewTicTacToeBlock extends View {
         }
     };
 
-    public ViewTicTacToeBlock(Context context, AttributeSet attrs) {
+    public ViewTicTacToeGameBoard(Context context, AttributeSet attrs) {
         super(context, attrs);
-
-        TypedArray a = context.getTheme().obtainStyledAttributes(
-                attrs,
-                R.styleable.ViewTicTacToeBlock,
-                0, 0);
-
-        try {
-            mType = TYPE.valueOf(a.getInteger(R.styleable.ViewTicTacToeBlock_blockType, 0));
-        } finally {
-            a.recycle();
-        }
         setupPaint();
         startAnimator();
+        init();
+    }
+
+    private void init() {
+        inflate(getContext(), R.layout.game_board, (ViewGroup)getParent());
     }
 
     private void startAnimator() {
-        if (mType.equals(TYPE.NONE)) {
-            return;
-        }
         mAnimator = ValueAnimator.ofFloat(0.0f, 1.0f);
         mAnimator.setInterpolator(new DecelerateInterpolator(2.5f));
         mAnimator.setDuration(2000);
@@ -88,21 +52,19 @@ public class ViewTicTacToeBlock extends View {
         mCanvasHeight = h;
     }
 
+
     @Override
     protected void onDraw(Canvas canvas) {
-        final float x = mCanvasWidth / 2;
-        final float y = mCanvasHeight / 2;
-        if (mType.equals(TYPE.CROSS)) {
-            PathUtils.drawCrossMark(canvas, mPaint, x, y, mCanvasWidth * 0.9 * mFraction);
-        } else if (mType.equals(TYPE.CIRCLE)) {
-            PathUtils.drawCircle(canvas, mPaint, x, y, (float) (mCanvasWidth * 0.4 * mFraction));
-        }
+        PathUtils.drawHorizontalLine(canvas, mPaint, mCanvasWidth / 2, mCanvasHeight / 3, mCanvasWidth * mFraction);
+        PathUtils.drawHorizontalLine(canvas, mPaint, mCanvasWidth / 2, mCanvasHeight * 2 / 3, mCanvasWidth * mFraction);
+        PathUtils.drawVerticalLine(canvas, mPaint, mCanvasWidth / 3, mCanvasHeight / 2, mCanvasHeight * mFraction * 0.95);
+        PathUtils.drawVerticalLine(canvas, mPaint, mCanvasWidth * 2/ 3, mCanvasHeight / 2, mCanvasHeight * mFraction * 0.95);
     }
 
     // Setup mPaint with color and stroke styles
     private void setupPaint() {
         mPaint = new Paint();
-        mPaint.setColor(getResources().getColor(R.color.colorPrimary));
+        mPaint.setColor(Color.parseColor("#FFDCDADB")); //EE82EE
         mPaint.setAntiAlias(true);
         mPaint.setStrokeWidth(15);
         mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
