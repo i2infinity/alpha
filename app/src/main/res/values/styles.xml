@@ -7,13 +7,20 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
-    <style name="WhiteTitleText" parent="TextAppearance.AppCompat">
-        <item name="android:textColor">#FFFFFF</item>
-        <item name="android:textSize">@dimen/large_text_size</item>
+    <style name="TextTitle" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/title_text_size</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:gravity">center_horizontal|center_vertical|center</item>
     </style>
-    <style name="WhiteRegularText" parent="TextAppearance.AppCompat">
+    <style name="TextHeader" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/header_text_size</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+    <style name="CommonText" parent="TextAppearance.AppCompat">
         <item name="android:textColor">#FFFFFF</item>
         <item name="android:textSize">@dimen/common_text_size</item>
     </style>

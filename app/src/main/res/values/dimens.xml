@@ -3,6 +3,7 @@
     <dimen name="common_margin">5dp</dimen>
     <dimen name="large_margin">10dp</dimen>
     <dimen name="common_padding">10dp</dimen>
-    <dimen name="large_text_size">30sp</dimen>
+    <dimen name="title_text_size">30sp</dimen>
+    <dimen name="header_text_size">20sp</dimen>
     <dimen name="common_text_size">15sp</dimen>
 </resources>
