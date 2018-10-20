@@ -4,7 +4,6 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.util.SparseArray;
@@ -50,6 +49,7 @@ public class ViewTicTacToeBlock extends View {
         public void onAnimationUpdate(ValueAnimator animation) {
             mFraction = animation.getAnimatedFraction();
             invalidate();
+            requestLayout();
         }
     };
 
@@ -70,7 +70,11 @@ public class ViewTicTacToeBlock extends View {
         startAnimator();
     }
 
-    private void startAnimator() {
+    public void setType(TYPE type) {
+        mType = type;
+    }
+
+    public void startAnimator() {
         if (mType.equals(TYPE.NONE)) {
             return;
         }
@@ -95,6 +99,11 @@ public class ViewTicTacToeBlock extends View {
         if (mType.equals(TYPE.CROSS)) {
             PathUtils.drawCrossMark(canvas, mPaint, x, y, mCanvasWidth * 0.9 * mFraction);
         } else if (mType.equals(TYPE.CIRCLE)) {
+            mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+            mPaint.setAlpha(100);
+            PathUtils.drawCircle(canvas, mPaint, x, y, (float) (mCanvasWidth * 0.4 * mFraction));
+            mPaint.setAlpha(255);
+            mPaint.setStyle(Paint.Style.STROKE);
             PathUtils.drawCircle(canvas, mPaint, x, y, (float) (mCanvasWidth * 0.4 * mFraction));
         }
     }
@@ -104,7 +113,7 @@ public class ViewTicTacToeBlock extends View {
         mPaint = new Paint();
         mPaint.setColor(getResources().getColor(R.color.colorPrimary));
         mPaint.setAntiAlias(true);
-        mPaint.setStrokeWidth(15);
+        mPaint.setStrokeWidth(20);
         mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         mPaint.setStrokeJoin(Paint.Join.ROUND);
         mPaint.setStrokeCap(Paint.Cap.ROUND);
