@@ -12,33 +12,33 @@ import android.view.animation.DecelerateInterpolator;
 
 public class ViewTicTacToeBlock extends View {
 
-    enum TYPE {
+    enum BlockType {
         NONE(0),
         CROSS(1),
         CIRCLE(2);
 
         private final int mValue;
-        private final static SparseArray<TYPE> mMap = new SparseArray<>();
+        private final static SparseArray<BlockType> mMap = new SparseArray<>();
 
 
-        TYPE(final int value) {
+        BlockType(final int value) {
             mValue = value;
         }
 
         static {
-            for (TYPE type : TYPE.values()) {
-                mMap.put(type.mValue, type);
+            for (BlockType blockType : BlockType.values()) {
+                mMap.put(blockType.mValue, blockType);
             }
         }
 
-        public static TYPE valueOf(int type) {
+        public static BlockType valueOf(int type) {
             return mMap.get(type);
         }
 
         public int getValue() { return mValue; }
     }
 
-    private TYPE mType;
+    private BlockType mBlockType;
     private Paint mPaint;
     private ValueAnimator mAnimator;
     private float mFraction = 0.0f;
@@ -62,7 +62,7 @@ public class ViewTicTacToeBlock extends View {
                 0, 0);
 
         try {
-            mType = TYPE.valueOf(a.getInteger(R.styleable.ViewTicTacToeBlock_blockType, 0));
+            mBlockType = BlockType.valueOf(a.getInteger(R.styleable.ViewTicTacToeBlock_blockType, 0));
         } finally {
             a.recycle();
         }
@@ -70,12 +70,12 @@ public class ViewTicTacToeBlock extends View {
         startAnimator();
     }
 
-    public void setType(TYPE type) {
-        mType = type;
+    public void setType(BlockType blockType) {
+        mBlockType = blockType;
     }
 
     public void startAnimator() {
-        if (mType.equals(TYPE.NONE)) {
+        if (mBlockType.equals(BlockType.NONE)) {
             return;
         }
         mAnimator = ValueAnimator.ofFloat(0.0f, 1.0f);
@@ -96,9 +96,9 @@ public class ViewTicTacToeBlock extends View {
     protected void onDraw(Canvas canvas) {
         final float x = mCanvasWidth / 2;
         final float y = mCanvasHeight / 2;
-        if (mType.equals(TYPE.CROSS)) {
+        if (mBlockType.equals(BlockType.CROSS)) {
             PathUtils.drawCrossMark(canvas, mPaint, x, y, mCanvasWidth * 0.9 * mFraction);
-        } else if (mType.equals(TYPE.CIRCLE)) {
+        } else if (mBlockType.equals(BlockType.CIRCLE)) {
             mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
             mPaint.setAlpha(100);
             PathUtils.drawCircle(canvas, mPaint, x, y, (float) (mCanvasWidth * 0.4 * mFraction));

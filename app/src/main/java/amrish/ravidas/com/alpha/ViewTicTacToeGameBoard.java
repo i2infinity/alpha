@@ -2,7 +2,6 @@ package amrish.ravidas.com.alpha;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -63,7 +62,7 @@ public class ViewTicTacToeGameBoard extends FrameLayout {
         if (gridPosition >= 0) {
             final ViewTicTacToeBlock block = getBlock(gridPosition);
             if (block != null) {
-                block.setType(ViewTicTacToeBlock.TYPE.CROSS);
+                block.setType(ViewTicTacToeBlock.BlockType.CROSS);
                 block.startAnimator();
             }
         }
