@@ -13,11 +13,12 @@ class GameState {
     private GameStatus mGameStatus;
     private int mCurrentPlayerIndex;
 
-    public GameState(Player player1, Player player2) {
+    GameState(Player player1, Player player2) {
         mBlocks = new ViewTicTacToeCell.CellType[3][3];
-        final ViewTicTacToeCell.CellType[] blocks = new ViewTicTacToeCell.CellType[3];
-        Arrays.fill(blocks, ViewTicTacToeCell.CellType.NONE);
-        Arrays.fill(mBlocks, blocks);
+        for (int i=0; i<mBlocks.length; i++) {
+            for (int j=0; j<mBlocks[i].length; j++)
+                mBlocks[i][j] = ViewTicTacToeCell.CellType.NONE;
+        }
         mGameStatus = GameStatus.InProgress;
         mPlayers = new Player[]{ player1, player2 };
         mCurrentPlayerIndex = 0;
@@ -119,6 +120,39 @@ class GameState {
         // TODO -   IN PROGRESS - UPDATE NEXT AND CURRENT PLAYER
         // TODO -   WINNER - UPDATE THE WINNER
         // TODO -   DRAW - COMPLETE GAME
+        if (getBlockTypeAtPosition(cellPosition) != ViewTicTacToeCell.CellType.NONE) {
+            throw new IllegalStateException();
+        }
+        final ViewTicTacToeCell.CellType cellType = getCurrentPlayer().getPlayerBlockType();
+        switch (cellPosition) {
+            case A:
+                mBlocks[0][0] = cellType;
+                break;
+            case B:
+                mBlocks[0][1] = cellType;
+                break;
+            case C:
+                mBlocks[0][2] = cellType;
+                break;
+            case D:
+                mBlocks[1][0] = cellType;
+                break;
+            case E:
+                mBlocks[1][1] = cellType;
+                break;
+            case F:
+                mBlocks[1][2] = cellType;
+                break;
+            case G:
+                mBlocks[2][0] = cellType;
+                break;
+            case H:
+                mBlocks[2][1] = cellType;
+                break;
+            case I:
+                mBlocks[2][2] = cellType;
+                break;
+        }
         mCurrentPlayerIndex = getNextPlayerIndex();
     }
 }

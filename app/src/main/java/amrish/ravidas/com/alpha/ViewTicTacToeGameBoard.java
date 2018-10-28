@@ -79,22 +79,15 @@ public class ViewTicTacToeGameBoard extends FrameLayout {
             if (mOnGridClickListener != null) {
                 mOnGridClickListener.onClick(GameState.CellPosition.valueOf(gridPosition));
             }
-//            final ViewTicTacToeCell block = getBlock(GameState.CellPosition.valueOf(gridPosition));
-//            if (block != null) {
-//                block.setType(ViewTicTacToeCell.CellType.CROSS);
-//                block.startAnimator();
-//            }
         }
     }
 
-    public boolean startAnimation(GameState.CellPosition cellPosition, ViewTicTacToeCell.CellType type) {
+    public void startAnimation(GameState.CellPosition cellPosition, ViewTicTacToeCell.CellType type) {
         final ViewTicTacToeCell cell = getBlock(cellPosition);
         if (cell != null) {
             cell.setType(type);
             cell.startAnimator();
-            return true;
         }
-        return false;
     }
 
     @Nullable
