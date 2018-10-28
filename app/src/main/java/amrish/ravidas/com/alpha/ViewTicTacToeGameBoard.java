@@ -17,15 +17,27 @@ public class ViewTicTacToeGameBoard extends FrameLayout {
 
     private final float[] mLastTouchDownXY = new float[2];
 
-    @BindView(R.id.block_1_1) ViewTicTacToeBlock block_1_1;
-    @BindView(R.id.block_1_2) ViewTicTacToeBlock block_1_2;
-    @BindView(R.id.block_1_3) ViewTicTacToeBlock block_1_3;
-    @BindView(R.id.block_2_1) ViewTicTacToeBlock block_2_1;
-    @BindView(R.id.block_2_2) ViewTicTacToeBlock block_2_2;
-    @BindView(R.id.block_2_3) ViewTicTacToeBlock block_2_3;
-    @BindView(R.id.block_3_1) ViewTicTacToeBlock block_3_1;
-    @BindView(R.id.block_3_2) ViewTicTacToeBlock block_3_2;
-    @BindView(R.id.block_3_3) ViewTicTacToeBlock block_3_3;
+    @Nullable
+    private TicTacToeGridClickListener mOnGridClickListener;
+
+    @BindView(R.id.block_1_1)
+    ViewTicTacToeCell block_1_1;
+    @BindView(R.id.block_1_2)
+    ViewTicTacToeCell block_1_2;
+    @BindView(R.id.block_1_3)
+    ViewTicTacToeCell block_1_3;
+    @BindView(R.id.block_2_1)
+    ViewTicTacToeCell block_2_1;
+    @BindView(R.id.block_2_2)
+    ViewTicTacToeCell block_2_2;
+    @BindView(R.id.block_2_3)
+    ViewTicTacToeCell block_2_3;
+    @BindView(R.id.block_3_1)
+    ViewTicTacToeCell block_3_1;
+    @BindView(R.id.block_3_2)
+    ViewTicTacToeCell block_3_2;
+    @BindView(R.id.block_3_3)
+    ViewTicTacToeCell block_3_3;
     @BindView(R.id.gameGrid) ViewGameGrid gameGrid;
 
     View.OnTouchListener touchListener = new View.OnTouchListener() {
@@ -54,42 +66,67 @@ public class ViewTicTacToeGameBoard extends FrameLayout {
         gameGrid.setOnTouchListener(touchListener);
     }
 
+    void setOnGridClickListener(TicTacToeGridClickListener listener) {
+        mOnGridClickListener = listener;
+    }
+
     @OnClick(R.id.gameGrid)
     public void onGridClick(View view) {
         float x = mLastTouchDownXY[0];
         float y = mLastTouchDownXY[1];
         int gridPosition = gameGrid.getNonantPosition(x, y);
-        if (gridPosition >= 0) {
-            final ViewTicTacToeBlock block = getBlock(gridPosition);
-            if (block != null) {
-                block.setType(ViewTicTacToeBlock.BlockType.CROSS);
-                block.startAnimator();
+        if (gridPosition >= 0 && gridPosition <= 8) {
+            if (mOnGridClickListener != null) {
+                mOnGridClickListener.onClick(GameState.CellPosition.valueOf(gridPosition));
             }
+//            final ViewTicTacToeCell block = getBlock(GameState.CellPosition.valueOf(gridPosition));
+//            if (block != null) {
+//                block.setType(ViewTicTacToeCell.CellType.CROSS);
+//                block.startAnimator();
+//            }
         }
     }
 
+    public boolean startAnimation(GameState.CellPosition cellPosition, ViewTicTacToeCell.CellType type) {
+        final ViewTicTacToeCell cell = getBlock(cellPosition);
+        if (cell != null) {
+            cell.setType(type);
+            cell.startAnimator();
+            return true;
+        }
+        return false;
+    }
+
     @Nullable
-    private ViewTicTacToeBlock getBlock(int index) {
-        switch (index) {
-            case 0:
+    private ViewTicTacToeCell getBlock(GameState.CellPosition cellPosition) {
+        switch (cellPosition) {
+            case A:
                 return block_1_1;
-            case 1:
+            case B:
                 return block_1_2;
-            case 2:
+            case C:
                 return block_1_3;
-            case 3:
+            case D:
                 return block_2_1;
-            case 4:
+            case E:
                 return block_2_2;
-            case 5:
+            case F:
                 return block_2_3;
-            case 6:
+            case G:
                 return block_3_1;
-            case 7:
+            case H:
                 return block_3_2;
-            case 8:
+            case I:
                 return block_3_3;
         }
         return null;
+    }
+
+    interface TicTacToeGridClickListener {
+        /**
+         * Invoked when user clicks on a tic-tac-toe block
+         * @param cellPosition The position of the block in Grid
+         */
+        void onClick(GameState.CellPosition cellPosition);
     }
 }

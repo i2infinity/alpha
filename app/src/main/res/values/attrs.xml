@@ -1,6 +1,6 @@
 <resources>
-    <declare-styleable name="ViewTicTacToeBlock">
-        <attr name="blockType" format="enum">
+    <declare-styleable name="ViewTicTacToeCell">
+        <attr name="cellType" format="enum">
             <enum name="none" value="0"/>
             <enum name="cross" value="1"/>
             <enum name="circle" value="2"/>

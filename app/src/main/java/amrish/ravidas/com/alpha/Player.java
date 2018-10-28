@@ -1,6 +1,7 @@
 package amrish.ravidas.com.alpha;
 
-import android.arch.lifecycle.LiveData;
+import androidx.lifecycle.LiveData;
+import androidx.annotation.NonNull;
 
 public interface Player {
     enum PlayerType {
@@ -8,13 +9,16 @@ public interface Player {
         AI
     }
 
+    @NonNull
     PlayerType getPlayerType();
 
-    ViewTicTacToeBlock.BlockType getPlayerBlockType();
+    @NonNull
+    ViewTicTacToeCell.CellType getPlayerBlockType();
 
     /**
      * Unique player identifier
      */
+    @NonNull
     String getPlayerId();
 
     /**
@@ -22,5 +26,6 @@ public interface Player {
      * @throws IllegalStateException when invoked after a game is complete or for a PlayerType
      * that does not support
      */
+    @NonNull
     LiveData<GameState> playNext() throws IllegalStateException;
 }

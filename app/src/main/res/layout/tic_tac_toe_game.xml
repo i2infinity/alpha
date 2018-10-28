@@ -5,11 +5,11 @@
         <variable name="viewModel" type="amrish.ravidas.com.alpha.TicTacToeGameViewModel"/>
         <import type="java.lang.String" />
     </data>
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/mainLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/titleBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -20,7 +20,7 @@
                 android:id="@+id/gameIcon"
                 android:layout_width="120dp"
                 android:layout_height="120dp" />
-            <android.support.constraint.ConstraintLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/scoreCard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -45,11 +45,11 @@
                     android:text="@{String.valueOf(viewModel.gameId)}"
                     style="@style/TextTitle"
                     app:layout_constraintLeft_toRightOf="@id/gameTitleText"/>
-                <amrish.ravidas.com.alpha.ViewTicTacToeBlock
+                <amrish.ravidas.com.alpha.ViewTicTacToeCell
                     android:id="@+id/blockPlayer1"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    app:blockType="circle"
+                    app:cellType="circle"
                     android:layout_marginStart="15dp"
                     android:layout_marginTop="10dp"
                     app:layout_constraintTop_toBottomOf="@id/gameTitleText"
@@ -66,11 +66,11 @@
                     android:layout_marginTop="10dp"
                     app:layout_constraintTop_toBottomOf="@id/gameTitleText"
                     app:layout_constraintLeft_toRightOf="@id/blockPlayer1"/>
-                <amrish.ravidas.com.alpha.ViewTicTacToeBlock
+                <amrish.ravidas.com.alpha.ViewTicTacToeCell
                     android:id="@+id/blockPlayer2"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    app:blockType="cross"
+                    app:cellType="cross"
                     android:layout_marginStart="15dp"
                     android:layout_marginTop="10dp"
                     app:layout_constraintTop_toBottomOf="@id/blockPlayer1"
@@ -87,15 +87,16 @@
                     android:layout_marginTop="15dp"
                     app:layout_constraintTop_toBottomOf="@id/playerOneText"
                     app:layout_constraintLeft_toRightOf="@id/blockPlayer2"/>
-            </android.support.constraint.ConstraintLayout>
-        </android.support.constraint.ConstraintLayout>
-        <android.support.constraint.ConstraintLayout
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/titleBar">
             <amrish.ravidas.com.alpha.ViewTicTacToeGameBoard
+                android:id="@+id/gameBoard"
                 android:layout_width="match_parent"
                 android:layout_height="550dp"/>
-        </android.support.constraint.ConstraintLayout>
-    </android.support.constraint.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

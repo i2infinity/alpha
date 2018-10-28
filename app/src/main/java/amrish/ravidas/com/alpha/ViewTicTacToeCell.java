@@ -10,35 +10,35 @@ import android.util.SparseArray;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 
-public class ViewTicTacToeBlock extends View {
+public class ViewTicTacToeCell extends View {
 
-    enum BlockType {
+    enum CellType {
         NONE(0),
         CROSS(1),
         CIRCLE(2);
 
         private final int mValue;
-        private final static SparseArray<BlockType> mMap = new SparseArray<>();
+        private final static SparseArray<CellType> mMap = new SparseArray<>();
 
 
-        BlockType(final int value) {
+        CellType(final int value) {
             mValue = value;
         }
 
         static {
-            for (BlockType blockType : BlockType.values()) {
-                mMap.put(blockType.mValue, blockType);
+            for (CellType cellType : CellType.values()) {
+                mMap.put(cellType.mValue, cellType);
             }
         }
 
-        public static BlockType valueOf(int type) {
+        public static CellType valueOf(int type) {
             return mMap.get(type);
         }
 
         public int getValue() { return mValue; }
     }
 
-    private BlockType mBlockType;
+    private CellType mCellType;
     private Paint mPaint;
     private ValueAnimator mAnimator;
     private float mFraction = 0.0f;
@@ -53,16 +53,16 @@ public class ViewTicTacToeBlock extends View {
         }
     };
 
-    public ViewTicTacToeBlock(Context context, AttributeSet attrs) {
+    public ViewTicTacToeCell(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         TypedArray a = context.getTheme().obtainStyledAttributes(
                 attrs,
-                R.styleable.ViewTicTacToeBlock,
+                R.styleable.ViewTicTacToeCell,
                 0, 0);
 
         try {
-            mBlockType = BlockType.valueOf(a.getInteger(R.styleable.ViewTicTacToeBlock_blockType, 0));
+            mCellType = CellType.valueOf(a.getInteger(R.styleable.ViewTicTacToeCell_cellType, 0));
         } finally {
             a.recycle();
         }
@@ -70,12 +70,12 @@ public class ViewTicTacToeBlock extends View {
         startAnimator();
     }
 
-    public void setType(BlockType blockType) {
-        mBlockType = blockType;
+    public void setType(CellType cellType) {
+        mCellType = cellType;
     }
 
     public void startAnimator() {
-        if (mBlockType.equals(BlockType.NONE)) {
+        if (mCellType.equals(CellType.NONE)) {
             return;
         }
         mAnimator = ValueAnimator.ofFloat(0.0f, 1.0f);
@@ -96,9 +96,9 @@ public class ViewTicTacToeBlock extends View {
     protected void onDraw(Canvas canvas) {
         final float x = mCanvasWidth / 2;
         final float y = mCanvasHeight / 2;
-        if (mBlockType.equals(BlockType.CROSS)) {
+        if (mCellType.equals(CellType.CROSS)) {
             PathUtils.drawCrossMark(canvas, mPaint, x, y, mCanvasWidth * 0.9 * mFraction);
-        } else if (mBlockType.equals(BlockType.CIRCLE)) {
+        } else if (mCellType.equals(CellType.CIRCLE)) {
             mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
             mPaint.setAlpha(100);
             PathUtils.drawCircle(canvas, mPaint, x, y, (float) (mCanvasWidth * 0.4 * mFraction));
