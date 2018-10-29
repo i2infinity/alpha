@@ -24,7 +24,9 @@ public class TicTacToeGameViewModel extends ViewModel {
         if (mCurrentState == null) {
             throw new IllegalStateException("Game not initialized");
         }
-
+        if (mCurrentState.getStatus().equals(GameState.GameStatus.HasWinner)) {
+            return false;
+        }
         return mCurrentState.getBlockTypeAtPosition(cellPosition).equals(ViewTicTacToeCell.CellType.NONE);
     }
 

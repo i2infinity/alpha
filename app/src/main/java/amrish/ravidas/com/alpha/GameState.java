@@ -4,14 +4,24 @@ import android.util.SparseArray;
 
 import androidx.annotation.NonNull;
 
-import java.util.Arrays;
+import static amrish.ravidas.com.alpha.GameState.CellPosition.A;
+import static amrish.ravidas.com.alpha.GameState.CellPosition.B;
+import static amrish.ravidas.com.alpha.GameState.CellPosition.C;
+import static amrish.ravidas.com.alpha.GameState.CellPosition.D;
+import static amrish.ravidas.com.alpha.GameState.CellPosition.E;
+import static amrish.ravidas.com.alpha.GameState.CellPosition.F;
+import static amrish.ravidas.com.alpha.GameState.CellPosition.G;
+import static amrish.ravidas.com.alpha.GameState.CellPosition.H;
+import static amrish.ravidas.com.alpha.GameState.CellPosition.I;
 
 class GameState {
 
-    private final ViewTicTacToeCell.CellType[][] mBlocks;
-    private Player[] mPlayers;
-    private GameStatus mGameStatus;
+    @NonNull private final ViewTicTacToeCell.CellType[][] mBlocks;
+    @NonNull private final Player[] mPlayers;
+    @NonNull private GameStatus mGameStatus;
     private int mCurrentPlayerIndex;
+    private int mStepCount;
+    @NonNull private CellPosition[] mWinningCells;
 
     GameState(Player player1, Player player2) {
         mBlocks = new ViewTicTacToeCell.CellType[3][3];
@@ -22,6 +32,8 @@ class GameState {
         mGameStatus = GameStatus.InProgress;
         mPlayers = new Player[]{ player1, player2 };
         mCurrentPlayerIndex = 0;
+        mStepCount = 0;
+        mWinningCells = new CellPosition[3];
     }
 
     enum GameStatus {
@@ -90,6 +102,11 @@ class GameState {
     }
 
     @NonNull
+    CellPosition[] getWinningCells() {
+        return mWinningCells;
+    }
+
+    @NonNull
     ViewTicTacToeCell.CellType getBlockTypeAtPosition(final CellPosition position) {
         switch (position) {
             case A:
@@ -154,5 +171,72 @@ class GameState {
                 break;
         }
         mCurrentPlayerIndex = getNextPlayerIndex();
+        mStepCount += 1;
+
+        // Check for winners
+        boolean[] mHorizontal = new boolean[]{true, true, true};
+        boolean[] mVertical = new boolean[]{true, true, true};
+        for (int i=0; i<3; i++) {
+            for (int j=0; j<3; j++) {
+                if (mBlocks[i][j] == ViewTicTacToeCell.CellType.NONE) {
+                    mHorizontal[i] = false;
+                    mVertical[j] = false;
+                    continue;
+                }
+                // Check for winner row-wise
+                if (mHorizontal[i] && j > 0 && mBlocks[i][j] != mBlocks[i][j-1]) {
+                    mHorizontal[i] = false;
+                }
+
+                // Check for winner column-wise
+                if (mVertical[j] && i > 0 && mBlocks[i][j] != mBlocks[i-1][j]) {
+                    mVertical[j] = false;
+                }
+            }
+        }
+
+        for (int i=0; i<mHorizontal.length; i++) {
+            if (mHorizontal[i]) {
+                mGameStatus = GameStatus.HasWinner;
+                mWinningCells = getCellsInRow(i);
+                break;
+            }
+        }
+
+        if (mGameStatus != GameStatus.HasWinner) {
+            for (int i=0; i<mVertical.length; i++) {
+                if (mVertical[i]) {
+                    mGameStatus = GameStatus.HasWinner;
+                    mWinningCells = getCellsInColumn(i);
+                    break;
+                }
+            }
+        }
+
+        if (mStepCount == 9 && mGameStatus != GameStatus.HasWinner) {
+            mGameStatus = GameStatus.Draw;
+        }
+    }
+
+    private CellPosition[] getCellsInRow(int row) {
+        switch (row) {
+            case 0:
+                return new CellPosition[]{A, B, C};
+            case 1:
+                return new CellPosition[]{D, E, F};
+            default:
+                return new CellPosition[]{G, H, I};
+        }
+    }
+
+    private CellPosition[] getCellsInColumn(int column) {
+        switch (column) {
+            case 0:
+                return new CellPosition[]{A, D, G};
+            case 1:
+                return new CellPosition[]{B, E, H};
+            default:
+                return new CellPosition[]{G, F, I};
+        }
     }
 }

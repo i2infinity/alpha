@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import amrish.ravidas.com.alpha.databinding.TicTacToeGameBinding;
 import butterknife.BindView;
@@ -25,7 +26,10 @@ public class TicTacToeFragment extends Fragment {
             // TODO - Can this leak memory?
             if (viewModel.canPlay(cellPosition)) {
                 gameBoard.startAnimation(cellPosition, viewModel.getCurrentState().getCurrentPlayer().getPlayerBlockType());
-                viewModel.onGridClicked(cellPosition);
+                final GameState state = viewModel.onGridClicked(cellPosition);
+                if (state.getStatus().equals(GameState.GameStatus.HasWinner)) {
+                    Toast.makeText(TicTacToeFragment.this.getContext(), "We have a winner", Toast.LENGTH_LONG).show();
+                }
             }
         }
     };
