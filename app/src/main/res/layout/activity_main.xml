@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_margin="@dimen/large_margin"
+    android:id="@+id/root_layout"
+    android:layout_margin="@dimen/no_margin"
+    android:padding="@dimen/common_padding"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/android_gradient_list"
     tools:context=".MainActivity">
     <fragment
         android:id="@+id/tic_tac_toe_fragment"
