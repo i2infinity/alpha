@@ -125,7 +125,7 @@ public class ViewTicTacToeCell extends View {
         mPaint = new Paint();
         mPaint.setColor(getResources().getColor(mColor));
         mPaint.setAntiAlias(true);
-        mPaint.setStrokeWidth(20);
+        mPaint.setStrokeWidth(10);
         mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         mPaint.setStrokeJoin(Paint.Join.ROUND);
         mPaint.setStrokeCap(Paint.Cap.ROUND);

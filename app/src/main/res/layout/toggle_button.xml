@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:text="Human"
         style="@style/TextButton"
+        android:minWidth="55dp"
         android:textColor="@color/colorWhite"
         app:layout_constraintLeft_toRightOf="@id/verticalGuide1"
         app:layout_constraintRight_toLeftOf="@id/verticalGuide2"/>

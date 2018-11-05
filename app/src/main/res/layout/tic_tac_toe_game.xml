@@ -55,7 +55,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:text="Human"
-                app:selected="false"
+                app:selected="true"
                 app:layout_constraintStart_toEndOf="@id/player1CellType"
                 app:layout_constraintTop_toTopOf="@id/playerBar1"
                 app:layout_constraintBottom_toBottomOf="@id/playerBar1"
@@ -80,16 +80,26 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:cellType="solidCircle"
                 app:cellColor="@color/colorWhite"/>
-            <!--<TextView-->
-                <!--android:id="@+id/player2Text"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--app:layout_constraintStart_toEndOf="@id/player2CellType"-->
-                <!--app:layout_constraintTop_toTopOf="@id/playerBar2"-->
-                <!--app:layout_constraintBottom_toBottomOf="@id/playerBar2"-->
-                <!--android:layout_marginStart="@dimen/large_margin"-->
-                <!--android:text="Player 2"-->
-                <!--style="@style/TextHeader1"/>-->
+            <amrish.ravidas.com.alpha.ViewToggleButton
+                android:id="@+id/player2_human"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:text="Human"
+                app:selected="true"
+                app:layout_constraintStart_toEndOf="@id/player2CellType"
+                app:layout_constraintTop_toTopOf="@id/playerBar2"
+                app:layout_constraintBottom_toBottomOf="@id/playerBar2"
+                android:layout_marginStart="@dimen/large_margin"/>
+            <amrish.ravidas.com.alpha.ViewToggleButton
+                android:id="@+id/player2_AI"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:text="AI"
+                app:selected="false"
+                app:layout_constraintStart_toEndOf="@id/player2_human"
+                app:layout_constraintTop_toTopOf="@id/playerBar2"
+                app:layout_constraintBottom_toBottomOf="@id/playerBar2"
+                android:layout_marginStart="@dimen/common_margin"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
