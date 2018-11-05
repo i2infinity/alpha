@@ -2,8 +2,10 @@ package amrish.ravidas.com.alpha;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.util.SparseArray;
@@ -15,7 +17,8 @@ public class ViewTicTacToeCell extends View {
     enum CellType {
         NONE(0),
         CROSS(1),
-        CIRCLE(2);
+        CIRCLE(2),
+        SOLID_CIRCLE(3);
 
         private final int mValue;
         private final static SparseArray<CellType> mMap = new SparseArray<>();
@@ -39,6 +42,7 @@ public class ViewTicTacToeCell extends View {
     }
 
     private CellType mCellType;
+    private int mColor;
     private Paint mPaint;
     private ValueAnimator mAnimator;
     private float mFraction = 0.0f;
@@ -63,6 +67,7 @@ public class ViewTicTacToeCell extends View {
 
         try {
             mCellType = CellType.valueOf(a.getInteger(R.styleable.ViewTicTacToeCell_cellType, 0));
+            mColor = a.getResourceId(R.styleable.ViewTicTacToeCell_cellColor, R.color.colorWhite);
         } finally {
             a.recycle();
         }
@@ -99,11 +104,18 @@ public class ViewTicTacToeCell extends View {
         if (mCellType.equals(CellType.CROSS)) {
             PathUtils.drawCrossMark(canvas, mPaint, x, y, mCanvasWidth * 0.9 * mFraction);
         } else if (mCellType.equals(CellType.CIRCLE)) {
+            // Draw the transparent fill
             mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
             mPaint.setAlpha(100);
             PathUtils.drawCircle(canvas, mPaint, x, y, (float) (mCanvasWidth * 0.4 * mFraction));
+            // Draw outer border
             mPaint.setAlpha(255);
             mPaint.setStyle(Paint.Style.STROKE);
+            PathUtils.drawCircle(canvas, mPaint, x, y, (float) (mCanvasWidth * 0.4 * mFraction));
+        } else if (mCellType.equals(CellType.SOLID_CIRCLE)) {
+            // Draw fill
+            mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+            mPaint.setAlpha(255);
             PathUtils.drawCircle(canvas, mPaint, x, y, (float) (mCanvasWidth * 0.4 * mFraction));
         }
     }
@@ -111,7 +123,7 @@ public class ViewTicTacToeCell extends View {
     // Setup mPaint with color and stroke styles
     private void setupPaint() {
         mPaint = new Paint();
-        mPaint.setColor(getResources().getColor(R.color.colorPrimary));
+        mPaint.setColor(getResources().getColor(mColor));
         mPaint.setAntiAlias(true);
         mPaint.setStrokeWidth(20);
         mPaint.setStyle(Paint.Style.FILL_AND_STROKE);

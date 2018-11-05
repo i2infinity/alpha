@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import amrish.ravidas.com.alpha.databinding.TicTacToeGameBinding;
@@ -18,7 +17,6 @@ import butterknife.Unbinder;
 public class TicTacToeFragment extends Fragment {
     private Unbinder unbinder;
     private TicTacToeGameViewModel viewModel;
-    @BindView(R.id.gameId) TextView detailsText;
     @BindView(R.id.gameBoard) ViewTicTacToeGameBoard gameBoard;
     private ViewTicTacToeGameBoard.TicTacToeGridClickListener listener = new ViewTicTacToeGameBoard.TicTacToeGridClickListener() {
         @Override
@@ -39,7 +37,6 @@ public class TicTacToeFragment extends Fragment {
                              Bundle savedInstanceState) {
         initializeViewModel();
         TicTacToeGameBinding binding = DataBindingUtil.inflate(inflater, R.layout.tic_tac_toe_game, container, false);
-        binding.setViewModel(viewModel);
         final View view = binding.getRoot();
         unbinder = ButterKnife.bind(this, view);
         gameBoard.setOnGridClickListener(listener);

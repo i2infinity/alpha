@@ -39,7 +39,7 @@ public class ViewIconTicTacToeAnimate extends View {
     private void startAnimator() {
         animator = ValueAnimator.ofFloat(0.0f, 1.0f);
         animator.setInterpolator(new DecelerateInterpolator(2.5f));
-        animator.setDuration(3000);
+        animator.setDuration(5000);
         animator.addUpdateListener(listener);
         animator.start();
     }
@@ -113,7 +113,7 @@ public class ViewIconTicTacToeAnimate extends View {
         paint = new Paint();
         paint.setColor(Color.parseColor("#FFFFFF")); //EE82EE
         paint.setAntiAlias(true);
-        paint.setStrokeWidth(5);
+        paint.setStrokeWidth(3);
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
         paint.setStrokeJoin(Paint.Join.ROUND);
         paint.setStrokeCap(Paint.Cap.ROUND);

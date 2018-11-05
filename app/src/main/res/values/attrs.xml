@@ -4,6 +4,12 @@
             <enum name="none" value="0"/>
             <enum name="cross" value="1"/>
             <enum name="circle" value="2"/>
+            <enum name="solidCircle" value="3"/>
         </attr>
+        <attr name="cellColor" format="reference" />
+    </declare-styleable>
+    <declare-styleable name="ViewToggleButton">
+        <attr name="selected" format="boolean"/>
+        <attr name="text" format="string"/>
     </declare-styleable>
 </resources>
