@@ -68,8 +68,8 @@ public class ViewGameGrid extends View {
         mPaint = new Paint();
         mPaint.setColor(Color.parseColor("#FFDCDADB")); //EE82EE
         mPaint.setAntiAlias(true);
-        mPaint.setStrokeWidth(15);
-        mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        mPaint.setStrokeWidth(5);
+        mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeJoin(Paint.Join.ROUND);
         mPaint.setStrokeCap(Paint.Cap.ROUND);
     }

@@ -102,21 +102,21 @@ public class ViewTicTacToeCell extends View {
         final float x = mCanvasWidth / 2;
         final float y = mCanvasHeight / 2;
         if (mCellType.equals(CellType.CROSS)) {
-            PathUtils.drawCrossMark(canvas, mPaint, x, y, mCanvasWidth * 0.9 * mFraction);
+            PathUtils.drawCrossMark(canvas, mPaint, x, y, mCanvasWidth * 0.7 * mFraction);
         } else if (mCellType.equals(CellType.CIRCLE)) {
             // Draw the transparent fill
             mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
             mPaint.setAlpha(100);
-            PathUtils.drawCircle(canvas, mPaint, x, y, (float) (mCanvasWidth * 0.4 * mFraction));
+            PathUtils.drawCircle(canvas, mPaint, x, y, (float) (mCanvasWidth * 0.3 * mFraction));
             // Draw outer border
             mPaint.setAlpha(255);
             mPaint.setStyle(Paint.Style.STROKE);
-            PathUtils.drawCircle(canvas, mPaint, x, y, (float) (mCanvasWidth * 0.4 * mFraction));
+            PathUtils.drawCircle(canvas, mPaint, x, y, (float) (mCanvasWidth * 0.3 * mFraction));
         } else if (mCellType.equals(CellType.SOLID_CIRCLE)) {
             // Draw fill
             mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
             mPaint.setAlpha(255);
-            PathUtils.drawCircle(canvas, mPaint, x, y, (float) (mCanvasWidth * 0.4 * mFraction));
+            PathUtils.drawCircle(canvas, mPaint, x, y, (float) (mCanvasWidth * 0.3 * mFraction));
         }
     }
 
