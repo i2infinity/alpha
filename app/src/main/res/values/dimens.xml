@@ -2,6 +2,7 @@
 <resources>
     <dimen name="no_margin">0dp</dimen>
     <dimen name="common_margin">5dp</dimen>
+    <dimen name="medium_margin">10dp</dimen>
     <dimen name="large_margin">20dp</dimen>
     <dimen name="large_padding">20dp</dimen>
     <dimen name="common_padding">10dp</dimen>

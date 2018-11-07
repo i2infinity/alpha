@@ -1,5 +1,6 @@
 package amrish.ravidas.com.alpha;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -8,27 +9,64 @@ import android.graphics.Path;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class ViewToggleButton extends FrameLayout {
 
     @BindView(R.id.buttonText)
-    TextView buttonText;
+    TextView mButtonText;
+
+    @BindView(R.id.buttonLayout)
+    ConstraintLayout mConstraintLayout;
+
+    private final float[] mLastTouchDownXY = new float[2];
     private final String mText;
     private boolean mIsSelected;
     private int mCanvasWidth = 0;
     private int mCanvasHeight = 0;
-    private Paint mWhiteStokePaint, mWhiteFillPaint, mFillPaint;
-    private RectF mRectFLeftArcBoundaries, mRectFRightArcBoundaries;
+    private Paint mWhiteStokePaint, mWhiteFillPaint, mFillPaint, mOnClickPaint;
     private int mDefaultColor = getResources().getColor(R.color.colorWhite);
+    private int mOnTouchColor = getResources().getColor(R.color.colorWhite);
     private int mSelectedColor = getResources().getColor(R.color.colorHotPink);
     private final Path mPath = new Path();
+    private final Path mPathTrim = new Path();
+    private float mFraction = 0.0f;
+    private ValueAnimator mAnimator;
+    private RectF mPillRectangle;
+
+    View.OnTouchListener touchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+
+            // save the X,Y coordinates
+            if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                mLastTouchDownXY[0] = event.getX();
+                mLastTouchDownXY[1] = event.getY();
+            }
+
+            // let the touch event pass on to whoever needs it
+            return false;
+        }
+    };
+
+    private final ValueAnimator.AnimatorUpdateListener listener = new ValueAnimator.AnimatorUpdateListener() {
+        @Override
+        public void onAnimationUpdate(ValueAnimator animation) {
+            mFraction = animation.getAnimatedFraction();
+            invalidate();
+            requestLayout();
+        }
+    };
 
     public ViewToggleButton(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -53,7 +91,22 @@ public class ViewToggleButton extends FrameLayout {
     private void init() {
         final View view = LayoutInflater.from(getContext()).inflate(R.layout.toggle_button, this, true);
         ButterKnife.bind(this, view);
-        buttonText.setText(mText);
+        mButtonText.setText(mText);
+        mConstraintLayout.setOnTouchListener(touchListener);
+    }
+
+    @OnClick(R.id.buttonLayout)
+    public void onLayoutClick(View view) {
+        startAnimator();
+    }
+
+    private void startAnimator() {
+        // TODO - Handle on-click events when previous one is in progress
+        mAnimator = ValueAnimator.ofFloat(0.0f, 1.0f);
+        mAnimator.setInterpolator(new DecelerateInterpolator(1.5f));
+        mAnimator.setDuration(500);
+        mAnimator.addUpdateListener(listener);
+        mAnimator.start();
     }
 
     @Override
@@ -62,8 +115,13 @@ public class ViewToggleButton extends FrameLayout {
         mCanvasWidth = w;
         mCanvasHeight = h;
         if (mCanvasHeight > 0 && mCanvasWidth > 0) {
-            mRectFLeftArcBoundaries = new RectF(mCanvasWidth * 0.70f, 12f, mCanvasWidth - 12, mCanvasHeight - 12);
-            mRectFRightArcBoundaries = new RectF(12, 12, mCanvasWidth * 0.30f, mCanvasHeight - 12);
+            mPillRectangle = new RectF(3.0f, mCanvasHeight - 3, mCanvasWidth - 3 , 3);
+            final RectF mFullRectangle = new RectF(0, mCanvasHeight, mCanvasWidth, 0);
+
+            mPathTrim.addRoundRect(mFullRectangle, 0, 0, Path.Direction.CW);
+            Path pathRoundedPill = new Path();
+            pathRoundedPill.addRoundRect(mFullRectangle, mCanvasHeight, mCanvasHeight, Path.Direction.CW);
+            mPathTrim.op(pathRoundedPill, Path.Op.DIFFERENCE);
         }
     }
 
@@ -74,26 +132,21 @@ public class ViewToggleButton extends FrameLayout {
         if (mIsSelected) {
             drawSelectedPath(canvas);
         } else {
-            drawUnSelectedPath(canvas);
+            drawNotSelectedPath(canvas);
+//            canvas.drawPath(mPathTrim, mFillPaint);
+        }
+
+        if (mFraction > 0 && mFraction < 1.0f) {
+            mPath.reset();
+            mPath.addCircle(mLastTouchDownXY[0], mLastTouchDownXY[1], mCanvasWidth * mFraction, Path.Direction.CW);
+            mPath.op(mPathTrim, Path.Op.DIFFERENCE);
+            canvas.drawPath(mPath, mOnClickPaint);
         }
     }
 
     private void drawSelectedPath(Canvas canvas) {
         mPath.reset();
-
-        // Top border
-        mPath.moveTo(mCanvasWidth * 0.15f, 12f);
-        mPath.lineTo(mCanvasWidth * 0.85f, 12f);
-
-        // Right arc
-        mPath.arcTo(mRectFLeftArcBoundaries, 270, 180);
-
-        // Bottom border
-        mPath.moveTo(mCanvasWidth * 0.85f, mCanvasHeight - 12);
-        mPath.lineTo(mCanvasWidth * 0.15f, mCanvasHeight - 12);
-
-        // Left arc
-        mPath.arcTo(mRectFRightArcBoundaries, 90, 180);
+        mPath.addRoundRect(mPillRectangle, mCanvasHeight, mCanvasHeight, Path.Direction.CW);
         canvas.drawPath(mPath, mFillPaint);
 
         // Outer circle
@@ -106,24 +159,9 @@ public class ViewToggleButton extends FrameLayout {
         canvas.drawPath(mPath, mWhiteFillPaint);
     }
 
-    private void drawUnSelectedPath(Canvas canvas) {
+    private void drawNotSelectedPath(Canvas canvas) {
         mPath.reset();
-
-        // Top border
-        mPath.moveTo(mCanvasWidth * 0.15f, 12f);
-        mPath.lineTo(mCanvasWidth * 0.85f, 12f);
-
-        // Right arc
-        mPath.arcTo(mRectFLeftArcBoundaries, 270, 180);
-
-        // Bottom border
-        mPath.moveTo(mCanvasWidth * 0.85f, mCanvasHeight - 12);
-        mPath.lineTo(mCanvasWidth * 0.15f, mCanvasHeight - 12);
-
-        // Left arc
-        mPath.arcTo(mRectFRightArcBoundaries, 90, 180);
-
-        // Outer circle
+        mPath.addRoundRect(mPillRectangle, mCanvasHeight, mCanvasHeight, Path.Direction.CW);
         mPath.addCircle(mCanvasWidth * 0.20f, mCanvasHeight / 2, mCanvasHeight / 5, Path.Direction.CW);
         canvas.drawPath(mPath, mWhiteStokePaint);
     }
@@ -155,6 +193,15 @@ public class ViewToggleButton extends FrameLayout {
         mFillPaint.setStrokeJoin(Paint.Join.ROUND);
         mFillPaint.setStrokeCap(Paint.Cap.ROUND);
 
-        buttonText.setTextColor(mDefaultColor);
+        mOnClickPaint = new Paint();
+        mOnClickPaint.setColor(mOnTouchColor);
+        mOnClickPaint.setAlpha(100);
+        mOnClickPaint.setAntiAlias(true);
+        mOnClickPaint.setStrokeWidth(6);
+        mOnClickPaint.setStyle(Paint.Style.FILL);
+        mOnClickPaint.setStrokeJoin(Paint.Join.ROUND);
+        mOnClickPaint.setStrokeCap(Paint.Cap.ROUND);
+
+        mButtonText.setTextColor(mDefaultColor);
     }
 }

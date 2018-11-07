@@ -99,7 +99,7 @@
                 app:layout_constraintStart_toEndOf="@id/player2_human"
                 app:layout_constraintTop_toTopOf="@id/playerBar2"
                 app:layout_constraintBottom_toBottomOf="@id/playerBar2"
-                android:layout_marginStart="@dimen/common_margin"/>
+                android:layout_marginStart="@dimen/medium_margin"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
