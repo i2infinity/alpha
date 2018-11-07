@@ -20,11 +20,12 @@ public class ViewGameGrid extends View {
     private float mGridLineFraction, mOnClickFraction = 0.0f;
     private int mCanvasWidth = 0;
     private int mCanvasHeight = 0;
+    private float[] mLastTouchDownXY;
     private int onClickAnimatePosition;
     private final float[] mRangeX = new float[3];
     private final float[] mRangeY = new float[3];
     private Path mPathRoundedRect, mPathClickAnimation, mPath;
-    private RectF[] mRectFBlocks = new RectF[9];
+    private Path[] mPathBlocks = new Path[9];
 
     private final ValueAnimator.AnimatorUpdateListener mGridLinesAnimatorListener = new ValueAnimator.AnimatorUpdateListener() {
         @Override
@@ -72,15 +73,23 @@ public class ViewGameGrid extends View {
         final RectF rectF = new RectF(0, mCanvasHeight, mCanvasWidth, 0);
         mPathRoundedRect = new Path();
         mPathRoundedRect.addRoundRect(rectF, 100, 100, Path.Direction.CW);
-        mRectFBlocks[0] = new RectF(0, mRangeY[0], mRangeX[0], 0);
-        mRectFBlocks[1] = new RectF(mRangeX[0], mRangeY[0], mRangeX[1], 0);
-        mRectFBlocks[2] = new RectF(mRangeX[1], mRangeY[0], mRangeX[2], 0);
-        mRectFBlocks[3] = new RectF(0, mRangeY[1], mRangeX[0], mRangeY[0]);
-        mRectFBlocks[4] = new RectF(mRangeX[0], mRangeY[1], mRangeX[1], mRangeY[0]);
-        mRectFBlocks[5] = new RectF(mRangeX[1], mRangeY[1], mRangeX[2], mRangeY[0]);
-        mRectFBlocks[6] = new RectF(0, mRangeY[2], mRangeX[0], mRangeY[1]);
-        mRectFBlocks[7] = new RectF(mRangeX[0], mRangeY[2], mRangeX[1], mRangeY[1]);
-        mRectFBlocks[8] = new RectF(mRangeX[1], mRangeY[2], mRangeX[2], mRangeY[1]);
+        for (int i=0; i<mPathBlocks.length; i++) {
+            mPathBlocks[i] = new Path();
+        }
+        RectF rect = new RectF(0, mRangeY[0], mRangeX[0], 0);
+        mPathBlocks[0].addRoundRect(rect, 0, 0, Path.Direction.CW);
+        mPathBlocks[0].op(mPathRoundedRect, Path.Op.INTERSECT);
+        mPathBlocks[1].addRoundRect(new RectF(mRangeX[0], mRangeY[0], mRangeX[1], 0), 0, 0, Path.Direction.CW);
+        mPathBlocks[2].addRoundRect(new RectF(mRangeX[1], mRangeY[0], mRangeX[2], 0), 0, 0, Path.Direction.CW);
+        mPathBlocks[2].op(mPathRoundedRect, Path.Op.INTERSECT);
+        mPathBlocks[3].addRoundRect(new RectF(0, mRangeY[1], mRangeX[0], mRangeY[0]), 0, 0, Path.Direction.CW);
+        mPathBlocks[4].addRoundRect(new RectF(mRangeX[0], mRangeY[1], mRangeX[1], mRangeY[0]), 0, 0, Path.Direction.CW);
+        mPathBlocks[5].addRoundRect(new RectF(mRangeX[1], mRangeY[1], mRangeX[2], mRangeY[0]), 0, 0, Path.Direction.CW);
+        mPathBlocks[6].addRoundRect(new RectF(0, mRangeY[2], mRangeX[0], mRangeY[1]), 0, 0, Path.Direction.CW);
+        mPathBlocks[6].op(mPathRoundedRect, Path.Op.INTERSECT);
+        mPathBlocks[7].addRoundRect(new RectF(mRangeX[0], mRangeY[2], mRangeX[1], mRangeY[1]), 0, 0, Path.Direction.CW);
+        mPathBlocks[8].addRoundRect(new RectF(mRangeX[1], mRangeY[2], mRangeX[2], mRangeY[1]), 0, 0, Path.Direction.CW);
+        mPathBlocks[8].op(mPathRoundedRect, Path.Op.INTERSECT);
     }
 
     @Override
@@ -88,7 +97,8 @@ public class ViewGameGrid extends View {
         mPath.reset();
         if (mOnClickFraction > 0 && mOnClickFraction < 1) {
             mPathClickAnimation.reset();
-            mPathClickAnimation.addRoundRect(mRectFBlocks[onClickAnimatePosition], 10, 10, Path.Direction.CW);
+            mPathClickAnimation.addCircle(mLastTouchDownXY[0], mLastTouchDownXY[1], mCanvasWidth * mOnClickFraction/2, Path.Direction.CW);
+            mPathClickAnimation.op(mPathBlocks[onClickAnimatePosition], Path.Op.INTERSECT);
             canvas.drawPath(mPathClickAnimation, mPaintOnClickAnimation);
         }
 
@@ -111,7 +121,7 @@ public class ViewGameGrid extends View {
 
         mPaintOnClickAnimation = new Paint();
         mPaintOnClickAnimation.setColor(mOnTouchColor);
-        mPaintOnClickAnimation.setAlpha(100);
+        mPaintOnClickAnimation.setAlpha(75);
         mPaintOnClickAnimation.setAntiAlias(true);
         mPaintOnClickAnimation.setStrokeWidth(6);
         mPaintOnClickAnimation.setStyle(Paint.Style.FILL);
@@ -119,7 +129,8 @@ public class ViewGameGrid extends View {
         mPaintOnClickAnimation.setStrokeCap(Paint.Cap.ROUND);
     }
 
-    public void startClickAnimation(int position) {
+    public void startClickAnimation(int position, float[] lastTouchDownXY) {
+        mLastTouchDownXY = lastTouchDownXY;
         onClickAnimatePosition = position;
         mOnClickAnimator = ValueAnimator.ofFloat(0.0f, 1.0f);
         mOnClickAnimator.setInterpolator(new DecelerateInterpolator(1.5f));
