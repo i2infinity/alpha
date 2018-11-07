@@ -7,6 +7,7 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.view.View;
@@ -41,6 +42,7 @@ public class ViewTicTacToeCell extends View {
         public int getValue() { return mValue; }
     }
 
+    private final Path mPath;
     private CellType mCellType;
     private int mColor;
     private Paint mPaint;
@@ -71,6 +73,7 @@ public class ViewTicTacToeCell extends View {
         } finally {
             a.recycle();
         }
+        mPath = new Path();
         setupPaint();
         startAnimator();
     }
@@ -99,25 +102,26 @@ public class ViewTicTacToeCell extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        mPath.reset();
         final float x = mCanvasWidth / 2;
         final float y = mCanvasHeight / 2;
         // TODO Do not create `new Path()` objects in onDraw(...)
         if (mCellType.equals(CellType.CROSS)) {
-            PathUtils.drawCrossMark(canvas, mPaint, x, y, mCanvasWidth * 0.7 * mFraction);
+            PathUtils.drawCrossMark(canvas, mPath, mPaint, x, y, mCanvasWidth * 0.7 * mFraction);
         } else if (mCellType.equals(CellType.CIRCLE)) {
             // Draw the transparent fill
             mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
             mPaint.setAlpha(100);
-            PathUtils.drawCircle(canvas, mPaint, x, y, (float) (mCanvasWidth * 0.3 * mFraction));
+            PathUtils.drawCircle(canvas, mPath, mPaint, x, y, (float) (mCanvasWidth * 0.3 * mFraction));
             // Draw outer border
             mPaint.setAlpha(255);
             mPaint.setStyle(Paint.Style.STROKE);
-            PathUtils.drawCircle(canvas, mPaint, x, y, (float) (mCanvasWidth * 0.3 * mFraction));
+            PathUtils.drawCircle(canvas, mPath, mPaint, x, y, (float) (mCanvasWidth * 0.3 * mFraction));
         } else if (mCellType.equals(CellType.SOLID_CIRCLE)) {
             // Draw fill
             mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
             mPaint.setAlpha(255);
-            PathUtils.drawCircle(canvas, mPaint, x, y, (float) (mCanvasWidth * 0.3 * mFraction));
+            PathUtils.drawCircle(canvas, mPath, mPaint, x, y, (float) (mCanvasWidth * 0.3 * mFraction));
         }
     }
 

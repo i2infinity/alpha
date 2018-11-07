@@ -6,6 +6,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import androidx.annotation.Nullable;
+
+import android.graphics.Path;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
@@ -15,6 +17,7 @@ import java.util.List;
 
 public class ViewIconTicTacToeAnimate extends View {
     private Paint paint;
+    private final Path mPath;
     private ValueAnimator animator;
     private float fraction = 0.0f;
     private int canvasWidth = 0;
@@ -24,6 +27,7 @@ public class ViewIconTicTacToeAnimate extends View {
         super(context, attrs);
         setFocusable(true);
         setFocusableInTouchMode(true);
+        mPath = new Path();
         setupPaint();
         startAnimator();
     }
@@ -92,18 +96,19 @@ public class ViewIconTicTacToeAnimate extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        mPath.reset();
         if (canvasHeight != canvasWidth) {
             throw new RuntimeException("Layout only works when width == height");
         }
         for (Position postn : getMidPoints()) {
             if (postn.type.equals(ShapeType.CROSS)) {
-                PathUtils.drawCrossMark(canvas, paint, postn.x, postn.y, (canvasWidth / 5) * fraction);
+                PathUtils.drawCrossMark(canvas, mPath, paint, postn.x, postn.y, (canvasWidth / 5) * fraction);
             } else if (postn.type.equals(ShapeType.CIRCLE)) {
-                PathUtils.drawCircle(canvas, paint, postn.x, postn.y, (canvasWidth / 15) * fraction);
+                PathUtils.drawCircle(canvas, mPath, paint, postn.x, postn.y, (canvasWidth / 15) * fraction);
             } else if (postn.type.equals(ShapeType.LINE_HORIZONTAL)) {
-                PathUtils.drawHorizontalLine(canvas, paint, postn.x, postn.y, canvasWidth * fraction);
+                PathUtils.drawHorizontalLine(canvas, mPath, paint, postn.x, postn.y, canvasWidth * fraction);
             } else if (postn.type.equals(ShapeType.LINE_VERTICAL)) {
-                PathUtils.drawVerticalLine(canvas, paint, postn.x, postn.y, canvasWidth * fraction);
+                PathUtils.drawVerticalLine(canvas, mPath, paint, postn.x, postn.y, canvasWidth * fraction);
             }
         }
     }

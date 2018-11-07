@@ -15,19 +15,26 @@ import android.view.animation.DecelerateInterpolator;
 
 public class ViewGameGrid extends View {
     private Paint mPaint;
-    private ValueAnimator mAnimator;
-    private float mFraction = 0.0f;
+    private ValueAnimator mGridLinesAnimator, mOnClickAnimator;
+    private float mGridLineFraction, mOnClickFraction = 0.0f;
     private int mCanvasWidth = 0;
     private int mCanvasHeight = 0;
     private final float[] mRangeX = new float[3];
     private final float[] mRangeY = new float[3];
-    private Path mPathRoundedRect;
+    private Path mPathRoundedRect, mPathClickAnimation, mPath;
 
-
-    private final ValueAnimator.AnimatorUpdateListener listener = new ValueAnimator.AnimatorUpdateListener() {
+    private final ValueAnimator.AnimatorUpdateListener mGridLinesAnimatorListener = new ValueAnimator.AnimatorUpdateListener() {
         @Override
         public void onAnimationUpdate(ValueAnimator animation) {
-            mFraction = animation.getAnimatedFraction();
+            mGridLineFraction = animation.getAnimatedFraction();
+            invalidate();
+        }
+    };
+
+    private final ValueAnimator.AnimatorUpdateListener mOnClickAnimationListener = new ValueAnimator.AnimatorUpdateListener() {
+        @Override
+        public void onAnimationUpdate(ValueAnimator animation) {
+            mOnClickFraction = animation.getAnimatedFraction();
             invalidate();
         }
     };
@@ -35,15 +42,17 @@ public class ViewGameGrid extends View {
     public ViewGameGrid(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         setupPaint();
-        startAnimator();
+        startAnimatorForGridLines();
+        mPathClickAnimation = new Path();
+        mPath = new Path();
     }
 
-    private void startAnimator() {
-        mAnimator = ValueAnimator.ofFloat(0.0f, 1.0f);
-        mAnimator.setInterpolator(new DecelerateInterpolator(2.5f));
-        mAnimator.setDuration(2000);
-        mAnimator.addUpdateListener(listener);
-        mAnimator.start();
+    private void startAnimatorForGridLines() {
+        mGridLinesAnimator = ValueAnimator.ofFloat(0.0f, 1.0f);
+        mGridLinesAnimator.setInterpolator(new DecelerateInterpolator(2.5f));
+        mGridLinesAnimator.setDuration(2000);
+        mGridLinesAnimator.addUpdateListener(mGridLinesAnimatorListener);
+        mGridLinesAnimator.start();
     }
 
     @Override
@@ -64,11 +73,16 @@ public class ViewGameGrid extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        // TODO - Do not create paths in onDraw()
-        PathUtils.drawHorizontalLine(canvas, mPaint, mCanvasWidth / 2, mCanvasHeight / 3, mCanvasWidth * mFraction);
-        PathUtils.drawHorizontalLine(canvas, mPaint, mCanvasWidth / 2, mCanvasHeight * 2 / 3, mCanvasWidth * mFraction);
-        PathUtils.drawVerticalLine(canvas, mPaint, mCanvasWidth / 3, mCanvasHeight / 2, mCanvasHeight * mFraction);
-        PathUtils.drawVerticalLine(canvas, mPaint, mCanvasWidth * 2/ 3, mCanvasHeight / 2, mCanvasHeight * mFraction);
+        mPath.reset();
+//        if (mOnClickFraction > 0 && mOnClickFraction < 1) {
+//            mPathClickAnimation.reset();
+//            mPathClickAnimation.addCircle(0, 0, 300 * mOnClickFraction, Path.Direction.CW);
+//            canvas.drawPath(mPathClickAnimation, mPaint);
+//        }
+        PathUtils.drawHorizontalLine(canvas, mPath, mPaint, mCanvasWidth / 2, mCanvasHeight / 3, mCanvasWidth * mGridLineFraction);
+        PathUtils.drawHorizontalLine(canvas, mPath, mPaint, mCanvasWidth / 2, mCanvasHeight * 2 / 3, mCanvasWidth * mGridLineFraction);
+        PathUtils.drawVerticalLine(canvas, mPath, mPaint, mCanvasWidth / 3, mCanvasHeight / 2, mCanvasHeight * mGridLineFraction);
+        PathUtils.drawVerticalLine(canvas, mPath, mPaint, mCanvasWidth * 2/ 3, mCanvasHeight / 2, mCanvasHeight * mGridLineFraction);
         canvas.drawPath(mPathRoundedRect, mPaint);
     }
 
@@ -81,6 +95,14 @@ public class ViewGameGrid extends View {
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeJoin(Paint.Join.ROUND);
         mPaint.setStrokeCap(Paint.Cap.ROUND);
+    }
+
+    public void startClickAnimation(int position) {
+        mOnClickAnimator = ValueAnimator.ofFloat(0.0f, 1.0f);
+        mOnClickAnimator.setInterpolator(new DecelerateInterpolator(2.5f));
+        mOnClickAnimator.setDuration(2000);
+        mOnClickAnimator.addUpdateListener(mOnClickAnimationListener);
+        mOnClickAnimator.start();
     }
 
     /**

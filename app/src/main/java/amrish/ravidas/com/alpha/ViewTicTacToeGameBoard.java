@@ -80,6 +80,7 @@ public class ViewTicTacToeGameBoard extends FrameLayout {
                 mOnGridClickListener.onClick(GameState.CellPosition.valueOf(gridPosition));
             }
         }
+        gameGrid.startClickAnimation(gridPosition);
     }
 
     public void startAnimation(GameState.CellPosition cellPosition, ViewTicTacToeCell.CellType type) {
