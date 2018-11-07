@@ -133,7 +133,6 @@ public class ViewToggleButton extends FrameLayout {
             drawSelectedPath(canvas);
         } else {
             drawNotSelectedPath(canvas);
-//            canvas.drawPath(mPathTrim, mFillPaint);
         }
 
         if (mFraction > 0 && mFraction < 1.0f) {

@@ -76,11 +76,11 @@ public class ViewTicTacToeGameBoard extends FrameLayout {
         float y = mLastTouchDownXY[1];
         int gridPosition = gameGrid.getNonantPosition(x, y);
         if (gridPosition >= 0 && gridPosition <= 8) {
+            gameGrid.startClickAnimation(gridPosition);
             if (mOnGridClickListener != null) {
                 mOnGridClickListener.onClick(GameState.CellPosition.valueOf(gridPosition));
             }
         }
-        gameGrid.startClickAnimation(gridPosition);
     }
 
     public void startAnimation(GameState.CellPosition cellPosition, ViewTicTacToeCell.CellType type) {
