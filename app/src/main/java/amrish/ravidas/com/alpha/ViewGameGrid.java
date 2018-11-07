@@ -6,6 +6,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import androidx.annotation.Nullable;
+
+import android.graphics.Path;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
@@ -18,6 +21,7 @@ public class ViewGameGrid extends View {
     private int mCanvasHeight = 0;
     private final float[] mRangeX = new float[3];
     private final float[] mRangeY = new float[3];
+    private Path mPathRoundedRect;
 
 
     private final ValueAnimator.AnimatorUpdateListener listener = new ValueAnimator.AnimatorUpdateListener() {
@@ -53,14 +57,19 @@ public class ViewGameGrid extends View {
         mRangeY[0] = h / 3;
         mRangeY[1] = h * 2/3;
         mRangeY[2] = h;
+        final RectF rectF = new RectF(0, mCanvasHeight, mCanvasWidth, 0);
+        mPathRoundedRect = new Path();
+        mPathRoundedRect.addRoundRect(rectF, 100, 100, Path.Direction.CW);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
+        // TODO - Do not create paths in onDraw()
         PathUtils.drawHorizontalLine(canvas, mPaint, mCanvasWidth / 2, mCanvasHeight / 3, mCanvasWidth * mFraction);
         PathUtils.drawHorizontalLine(canvas, mPaint, mCanvasWidth / 2, mCanvasHeight * 2 / 3, mCanvasWidth * mFraction);
-        PathUtils.drawVerticalLine(canvas, mPaint, mCanvasWidth / 3, mCanvasHeight / 2, mCanvasHeight * mFraction * 0.95);
-        PathUtils.drawVerticalLine(canvas, mPaint, mCanvasWidth * 2/ 3, mCanvasHeight / 2, mCanvasHeight * mFraction * 0.95);
+        PathUtils.drawVerticalLine(canvas, mPaint, mCanvasWidth / 3, mCanvasHeight / 2, mCanvasHeight * mFraction);
+        PathUtils.drawVerticalLine(canvas, mPaint, mCanvasWidth * 2/ 3, mCanvasHeight / 2, mCanvasHeight * mFraction);
+        canvas.drawPath(mPathRoundedRect, mPaint);
     }
 
     // Setup mPaint with color and stroke styles

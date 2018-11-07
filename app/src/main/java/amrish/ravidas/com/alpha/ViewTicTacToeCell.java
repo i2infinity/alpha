@@ -85,7 +85,7 @@ public class ViewTicTacToeCell extends View {
         }
         mAnimator = ValueAnimator.ofFloat(0.0f, 1.0f);
         mAnimator.setInterpolator(new DecelerateInterpolator(2.5f));
-        mAnimator.setDuration(2000);
+        mAnimator.setDuration(1000);
         mAnimator.addUpdateListener(listener);
         mAnimator.start();
     }
@@ -101,6 +101,7 @@ public class ViewTicTacToeCell extends View {
     protected void onDraw(Canvas canvas) {
         final float x = mCanvasWidth / 2;
         final float y = mCanvasHeight / 2;
+        // TODO Do not create `new Path()` objects in onDraw(...)
         if (mCellType.equals(CellType.CROSS)) {
             PathUtils.drawCrossMark(canvas, mPaint, x, y, mCanvasWidth * 0.7 * mFraction);
         } else if (mCellType.equals(CellType.CIRCLE)) {
