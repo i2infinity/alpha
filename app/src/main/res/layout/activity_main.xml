@@ -14,7 +14,6 @@
         android:layout_height="0dp"
         android:layout_margin="@dimen/common_margin"
         class="amrish.ravidas.com.alpha.TicTacToeFragment"
-        tools:layout="@layout/tic_tac_toe_game"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/bottomBar"/>
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -25,6 +24,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
         <LinearLayout
+            android:id="@+id/resetLayout"
             android:background="@drawable/layout_rounded_corners_gray"
             android:layout_width="wrap_content"
             android:padding="@dimen/common_padding"

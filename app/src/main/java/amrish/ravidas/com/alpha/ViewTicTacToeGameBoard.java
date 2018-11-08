@@ -13,6 +13,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+/**
+ * TODO Can the gameboard observe changes to view model and automatically update cell?
+ */
 public class ViewTicTacToeGameBoard extends FrameLayout {
 
     private final float[] mLastTouchDownXY = new float[2];
@@ -48,6 +51,10 @@ public class ViewTicTacToeGameBoard extends FrameLayout {
             if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
                 mLastTouchDownXY[0] = event.getX();
                 mLastTouchDownXY[1] = event.getY();
+                int gridPosition = gameGrid.getNonantPosition(mLastTouchDownXY[0], mLastTouchDownXY[1]);
+                if (gridPosition >= 0 && gridPosition <= 8) {
+                    gameGrid.startClickAnimation(gridPosition, mLastTouchDownXY);
+                }
             }
 
             // let the touch event pass on to whoever needs it
@@ -76,7 +83,6 @@ public class ViewTicTacToeGameBoard extends FrameLayout {
         float y = mLastTouchDownXY[1];
         int gridPosition = gameGrid.getNonantPosition(x, y);
         if (gridPosition >= 0 && gridPosition <= 8) {
-            gameGrid.startClickAnimation(gridPosition, mLastTouchDownXY);
             if (mOnGridClickListener != null) {
                 mOnGridClickListener.onClick(GameState.CellPosition.valueOf(gridPosition));
             }
@@ -89,6 +95,29 @@ public class ViewTicTacToeGameBoard extends FrameLayout {
             cell.setType(type);
             cell.startAnimator();
         }
+    }
+
+    public void reset() {
+        block_1_1.setType(ViewTicTacToeCell.CellType.NONE);
+        block_1_1.startAnimator();
+        block_1_2.setType(ViewTicTacToeCell.CellType.NONE);
+        block_1_2.startAnimator();
+        block_1_3.setType(ViewTicTacToeCell.CellType.NONE);
+        block_1_3.startAnimator();
+
+        block_2_1.setType(ViewTicTacToeCell.CellType.NONE);
+        block_2_1.startAnimator();
+        block_2_2.setType(ViewTicTacToeCell.CellType.NONE);
+        block_2_2.startAnimator();
+        block_2_3.setType(ViewTicTacToeCell.CellType.NONE);
+        block_2_3.startAnimator();
+
+        block_3_1.setType(ViewTicTacToeCell.CellType.NONE);
+        block_3_1.startAnimator();
+        block_3_2.setType(ViewTicTacToeCell.CellType.NONE);
+        block_3_2.startAnimator();
+        block_3_3.setType(ViewTicTacToeCell.CellType.NONE);
+        block_3_3.startAnimator();
     }
 
     @Nullable

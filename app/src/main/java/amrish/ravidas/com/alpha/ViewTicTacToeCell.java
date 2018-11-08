@@ -84,6 +84,7 @@ public class ViewTicTacToeCell extends View {
 
     public void startAnimator() {
         if (mCellType.equals(CellType.NONE)) {
+            invalidate();
             return;
         }
         mAnimator = ValueAnimator.ofFloat(0.0f, 1.0f);

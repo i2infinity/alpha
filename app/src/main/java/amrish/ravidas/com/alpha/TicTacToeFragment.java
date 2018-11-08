@@ -17,12 +17,16 @@ import butterknife.Unbinder;
 public class TicTacToeFragment extends Fragment {
     private Unbinder unbinder;
     private TicTacToeGameViewModel viewModel;
+    private final Player player1 = new HumanPlayer(ViewTicTacToeCell.CellType.CIRCLE);
+    private final Player player2 = new HumanPlayer(ViewTicTacToeCell.CellType.CROSS);
+
     @BindView(R.id.gameBoard) ViewTicTacToeGameBoard gameBoard;
     private ViewTicTacToeGameBoard.TicTacToeGridClickListener listener = new ViewTicTacToeGameBoard.TicTacToeGridClickListener() {
         @Override
         public void onClick(GameState.CellPosition cellPosition) {
             // TODO - Can this leak memory?
             if (viewModel.canPlay(cellPosition)) {
+                // TODO Can the gameboard observe changes to view model and automatically update cell?
                 gameBoard.startAnimation(cellPosition, viewModel.getCurrentState().getCurrentPlayer().getPlayerBlockType());
                 final GameState state = viewModel.onGridClicked(cellPosition);
                 if (state.getStatus().equals(GameState.GameStatus.HasWinner)) {
@@ -31,6 +35,11 @@ public class TicTacToeFragment extends Fragment {
             }
         }
     };
+
+    void resetGame() {
+        viewModel.init(player1, player2);
+        gameBoard.reset();
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -45,8 +54,7 @@ public class TicTacToeFragment extends Fragment {
 
     private void initializeViewModel() {
         viewModel = new TicTacToeGameViewModel(); // TODO Use ViewModelProviders.of(...) factory
-        viewModel.init(new HumanPlayer(ViewTicTacToeCell.CellType.CIRCLE),
-                new HumanPlayer(ViewTicTacToeCell.CellType.CROSS));
+        viewModel.init(player1, player2);
     }
 
     @Override public void onDestroyView() {
